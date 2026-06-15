@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4   # PostgreSQL 16 with PostGIS preinstalled
+    environment:
+      POSTGRES_DB: qvikmap
+      POSTGRES_USER: qvik
+      POSTGRES_PASSWORD: changeme_in_env   # use a real secret later
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data   # keeps data when container restarts
+volumes:
+  db_data:

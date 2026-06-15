@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/qvikmap
+    username: qvik
+    password: ${DB_PASSWORD}        # read from environment variable, NOT hardcoded
+  jpa:
+    hibernate:
+      ddl-auto: validate            # Flyway owns the schema; JPA only validates
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info        # Actuator: /actuator/health for monitoring
