@@ -1,4 +1,5 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import 'leaflet/dist/leaflet.css';
 import type { Shop } from '../types/shop';
 
@@ -16,21 +17,23 @@ export function ShopMap({ shops }: Props) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {shops.map((shop) => (
-        <Marker key={shop.id} position={[shop.lat, shop.lng]}>
-          <Popup>
-            <strong>{shop.name}</strong>
-            <br />
-            {shop.address}
-            {shop.sponsored && (
-              <>
-                <br />
-                <em>★ Featured partner</em>
-              </>
-            )}
-          </Popup>
-        </Marker>
-      ))}
+      <MarkerClusterGroup chunkedLoading>
+        {shops.map((shop) => (
+          <Marker key={shop.id} position={[shop.lat, shop.lng]}>
+            <Popup>
+              <strong>{shop.name}</strong>
+              <br />
+              {shop.address}
+              {shop.sponsored && (
+                <>
+                  <br />
+                  <em>★ Featured partner</em>
+                </>
+              )}
+            </Popup>
+          </Marker>
+        ))}
+      </MarkerClusterGroup>
     </MapContainer>
   );
 }
