@@ -1,0 +1,18 @@
+# Site address comes from the SITE_ADDRESS env var.
+#   - Local testing:  leave it unset -> defaults to ":80" (plain HTTP).
+#   - Production:      set SITE_ADDRESS=yourdomain.hu -> Caddy auto-fetches HTTPS.
+{$SITE_ADDRESS::80} {
+    encode gzip zstd
+
+    # API calls are forwarded to the backend container (service name "backend").
+    handle /api/* {
+        reverse_proxy backend:8080
+    }
+
+    # Everything else is the React single-page app served from /srv.
+    handle {
+        root * /srv
+        try_files {path} /index.html   # SPA fallback so deep links work
+        file_server
+    }
+}

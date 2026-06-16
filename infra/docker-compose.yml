@@ -1,13 +1,32 @@
 services:
   db:
-    image: postgis/postgis:16-3.4   # PostgreSQL 16 with PostGIS preinstalled
+    image: postgis/postgis:16-3.4
     environment:
       POSTGRES_DB: qvikmap
       POSTGRES_USER: qvik
-      POSTGRES_PASSWORD: changeme_in_env   # use a real secret later
-    ports:
-      - "5432:5432"
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes: [ db_data:/var/lib/postgresql/data ]
+    restart: unless-stopped
+
+  backend:
+    build: ../backend
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/qvikmap
+    depends_on: [ db ]
+    restart: unless-stopped
+
+  web:
+    build: ../frontend            # self-contained image: Caddy + built React app
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}   # ":80" locally; your domain in prod
+    ports: [ "80:80", "443:443" ]
     volumes:
-      - db_data:/var/lib/postgresql/data   # keeps data when container restarts
+      - ./Caddyfile:/etc/caddy/Caddyfile   # config stays editable without a rebuild
+      - caddy_data:/data                    # persists HTTPS certificates
+    depends_on: [ backend ]
+    restart: unless-stopped
+
 volumes:
   db_data:
+  caddy_data:
