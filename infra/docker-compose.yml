@@ -5,6 +5,7 @@ services:
       POSTGRES_DB: qvikmap
       POSTGRES_USER: qvik
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports: ["127.0.0.1:5432:5432"]  # localhost-only: lets mvnw reach the db during dev
     volumes: [ db_data:/var/lib/postgresql/data ]
     restart: unless-stopped
 

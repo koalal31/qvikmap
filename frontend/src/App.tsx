@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ShopMap } from './components/ShopMap';
 import { FilterPanel, type Filters } from './components/FilterPanel';
+import { SuggestShopModal } from './components/SuggestShopModal';
 import { fetchShops } from './api/shops';
 import type { Shop } from './types/shop';
 
@@ -9,6 +10,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<Filters>({ city: '', type: '' });
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [suggestOpen, setSuggestOpen] = useState(false);
 
   useEffect(() => {
     // Debounce: wait 300ms after the last filter change before calling the API,
@@ -37,13 +39,20 @@ export default function App() {
       <aside
         className={`${mobileOpen ? 'block' : 'hidden'} md:block absolute inset-0 z-999 w-full overflow-auto border-r border-gray-200 bg-white p-4 pt-16 md:static md:inset-auto md:w-72 md:shrink-0 md:pt-4`}
       >
-        <FilterPanel filters={filters} onChange={setFilters} resultCount={shops.length} />
+        <FilterPanel
+          filters={filters}
+          onChange={setFilters}
+          resultCount={shops.length}
+          onSuggest={() => setSuggestOpen(true)}
+        />
         {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
       </aside>
 
       <main className="h-full flex-1">
         <ShopMap shops={shops} />
       </main>
+
+      {suggestOpen && <SuggestShopModal onClose={() => setSuggestOpen(false)} />}
     </div>
   );
 }

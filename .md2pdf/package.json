@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "markdown-it": "^14.2.0",
+    "pdfmake": "^0.2.23"
+  }
+}

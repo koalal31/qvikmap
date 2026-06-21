@@ -9,9 +9,10 @@ interface Props {
   filters: Filters;
   onChange: (filters: Filters) => void;
   resultCount: number;
+  onSuggest: () => void;
 }
 
-export function FilterPanel({ filters, onChange, resultCount }: Props) {
+export function FilterPanel({ filters, onChange, resultCount, onSuggest }: Props) {
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -57,6 +58,16 @@ export function FilterPanel({ filters, onChange, resultCount }: Props) {
           Clear filters
         </button>
       )}
+
+      <hr className="border-gray-200" />
+
+      <button
+        type="button"
+        onClick={onSuggest}
+        className="rounded border border-blue-600 px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50"
+      >
+        + Suggest a shop
+      </button>
     </div>
   );
 }
